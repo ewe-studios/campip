@@ -87,6 +87,7 @@ pub fn get_location_by_id(conn: &PgConnection, location_id: i32) -> AppResult<Lo
 }
 
 pub async fn create_database_pool(database_url: String) -> PgPool {
+    debug!("Creating database connection manager using url {}", database_url);
     let manager = ConnectionManager::<PgConnection>::new(database_url);
     r2d2::Pool::builder()
         .build(manager)
