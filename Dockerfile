@@ -5,18 +5,22 @@ COPY . /app
 
 RUN cargo build --release
 
+RUN chmod -x /app/target/release/campip
+
 FROM debian:buster-slim
 
-RUN apt-get update && apt-get install -y ca-certificates tzdata && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libpq5 ca-certificates tzdata && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/apt/archives/*
 
-RUN groupadd app && useradd -g app app
+COPY --from=builder /app/target/release/campip /bin/campip
 
-COPY --chown=app --from=builder /app/target/release/campip /bin/campip
+RUN chmod +x /bin/campip && \
+	chown root:root /bin/campip && \
+	groupadd app && useradd -g app app
 
-RUN chmod -x /bin/campip
-
-#USER app
+USER app
 
 EXPOSE 7800
 
-CMD ["/bin/campip"]
+CMD ["/bin/campip", "serve"]

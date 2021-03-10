@@ -5,7 +5,7 @@ services:
     image: postgres:13.2
     restart: unless-stopped
     ports:
-    - "5632:5432"
+    - "5432:5432"
     networks:
       - services
     volumes:
