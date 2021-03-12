@@ -2,5 +2,6 @@ target
 .pg
 infra
 assets/csv/IP2LOCATION-LITE-DB11.CSV
+.idea/sonarlint
+.idea/sonarlint/*
 sonarIssues.xml
-idea/sonarlint

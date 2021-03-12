@@ -26,11 +26,18 @@ async fn main() -> Result {
 
     if cmd == "serve" {
         let addr = env::var("ADDR").expect("ADDR to be set");
-        let database_url = env::var("DATABASE_URL").expect("DB_URL to be set");
+
+        let postgres_username = env::var("POSTGRES_USER").expect("must be provided");
+        let postgres_password = env::var("POSTGRES_PASSWORD").expect("must be provided");
+        let postgres_addr = env::var("POSTGRES_ADDR").expect("must be provided");
+        let postgres_db = env::var("POSTGRES_DB").expect("must be provided");
+
+        let database_url = format!("postgres://{}:{}@{}/{}", postgres_username, postgres_password, postgres_addr, postgres_db);
+
         let port_str: String = env::var("PORT").expect("PORT to be set");
         let port: u16 = port_str.parse::<u16>().unwrap();
 
-        println!("Starting webserver on {}:{:?}", addr, port);
+        println!("Starting webserver on {}:{:?} and connecting to db on {}", addr, port, database_url);
         match campip::run(port, addr, database_url, LOG_FORMAT.parse().unwrap()).await {
             Ok(()) => {
                 println!("bye!")
