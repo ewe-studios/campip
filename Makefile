@@ -3,8 +3,8 @@ args?=
 build:
 	cargo build
 
-build-release:
-	cargo build release
+release:
+	cargo build --release
 
 binary_exec:
 	chmod +x target/debug/campip
