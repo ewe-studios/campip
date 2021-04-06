@@ -40,14 +40,16 @@ async fn main() -> Result {
 
 	let database_url = format!("postgres://{}:{}@{}/{}", postgres_username, postgres_password, postgres_addr, postgres_db);
 
-
     let cmd = args()
         .nth(1)
         .expect("expected command to be provided")
         .parse::<String>()
         .expect("invalid value type");
 
+    let mut handled = false;
 	if cmd == "setup" {
+        handled = true;
+
         match setup_db(database_url.clone()).await {
             Ok(()) => {
                 println!("Finished!")
@@ -59,6 +61,7 @@ async fn main() -> Result {
 	}
 
     if cmd == "serve" {
+        handled = true;
         let addr = env::var("ADDR").expect("ADDR to be set");
 
         let port_str: String = env::var("PORT").expect("PORT to be set");
@@ -72,10 +75,11 @@ async fn main() -> Result {
             Err(error) => {
                 panic!("failed to start server: {}", error)
             }
-        };
+        }
     }
 
     if cmd == "from_csv" {
+        handled = true;
         let csv_file = args()
             .nth(2)
             .expect("expected file path to be provided")
@@ -89,9 +93,12 @@ async fn main() -> Result {
             Err(error) => {
                 panic!("failed to move csv files over: {}", error)
             }
-        };
+        }
     }
 
-    println!("unknown command");
+    if !handled {
+        println!("unknown command");
+    }
+
     Ok(())
 }
