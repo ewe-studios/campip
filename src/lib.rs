@@ -2,6 +2,9 @@
 extern crate diesel;
 
 #[macro_use]
+extern crate diesel_migrations;
+
+#[macro_use]
 extern crate serde_derive;
 
 #[macro_use]
@@ -18,6 +21,8 @@ mod utils;
 
 use crate::data::csv::{write_csv_to_db, CSVResult};
 use crate::db::postgres::{create_database_pool, create_pg_connection};
+use diesel::PgConnection;
+
 
 pub async fn run(
     port: u16,
@@ -46,4 +51,8 @@ pub async fn copy_from_csv(
     let database_conn = create_pg_connection(database_url).await;
     let records = write_csv_to_db(&database_conn, csv_file.as_str(), batch)?;
     Ok(records)
+}
+
+pub async fn get_db(database_url: String) -> PgConnection {
+    create_pg_connection(database_url).await
 }

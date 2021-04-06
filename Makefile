@@ -1,3 +1,5 @@
+args?=
+
 build:
 	cargo build
 
@@ -12,7 +14,10 @@ tag-docker:
 	docker tag ewestudios-campip:latest ewestudios/campip:latest
 
 build-docker: binary_exec
-	docker build -t ewestudios-campip:latest .
+	docker build ${args} -t ewestudios-campip:latest .
+
+push:
+	docker push  ewestudios/campip:latest
 
 docker: build-docker tag-docker
 

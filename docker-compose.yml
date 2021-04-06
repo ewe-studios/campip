@@ -10,11 +10,8 @@ services:
       - services
     volumes:
       - ".pg:/var/lib/postgresql/data"
-    environment:
-      POSTGRES_DB: campip
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: campip
-
+    env_file:
+      - .env
 
 networks:
   services:
